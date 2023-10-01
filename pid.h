@@ -71,9 +71,9 @@ class PID {
                 _err[0] = setpoint - processValue;
                 // compute the new control value
                 float pollRate = timer.PRE > 0 ? static_cast<float>(timer.PRE) : 1.0;
-                _cp = (kp * (_err[0] - _err[1]));
-                _ci = (ki * _err[0] * pollRate);
-                _cd = (kd * (_err[0] - (2 * _err[1]) + _err[2]) / pollRate);
+                _cp = k*(kp * (_err[0] - _err[1]));
+                _ci = k*(ki * _err[0] * pollRate);
+                _cd = k*(kd * (_err[0] - (2 * _err[1]) + _err[2]) / pollRate);
 
                 // evaluate expression for deadband active
                 _deadbandActive = (deadbandMode != DeadbandMode::OFF)
@@ -90,7 +90,7 @@ class PID {
                             );
 
                 if (!_deadbandActive) {
-                    _controlValue = _controlValue + (k * (_cp + _ci + _cd));
+                    _controlValue = _controlValue + (_cp + _ci + _cd);
                     if (_controlValue < min) {_controlValue = min;}
                     if (_controlValue > max) {_controlValue = max;}
                 }
